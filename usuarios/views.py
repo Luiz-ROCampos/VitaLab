@@ -62,5 +62,5 @@ def logar(request):
             messages.add_message(request, constants.ERROR, 'Usuário ou senha não estão corretos.')
             return redirect('/usuarios/login')
         
-        return HttpResponse(f'{username} - {senha}')
+        
 
