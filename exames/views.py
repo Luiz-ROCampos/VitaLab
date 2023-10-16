@@ -48,4 +48,20 @@ def fechar_pedido(request):
     pedido_exame.save()    
     messages.add_message(request, constants.SUCCESS, 'Pedidos de exames realizado com sucesso!')
 
-    return redirect('/exames/ver_pedidos/')
+    return redirect('/exames/gerenciar_pedidos/')
+
+def gerenciar_pedidos(request):
+    pedidos_exames = PedidosExames.objects.filter(usuario=request.user)
+
+    return render(request, 'gerenciar_pedidos.html', {'pedidos_exames': pedidos_exames})
+
+def cancelar_pedidos(request, pedido_id):
+    pedido = PedidosExames.objects.get(id=pedido_id)
+
+    if not pedido.usuario == request.user:
+        messages.add_message(request, constants.ERROR, 'Esse pedido não é seu, portanto você não pode cancelar.')
+        return redirect('/exames/gerenciar_pedidos/')
+    pedido.agendado = False
+    pedido.save()
+    messages.add_message(request, constants.SUCCESS, "Pedidos cancelado com sucesso!")
+    return redirect('/exames/gerenciar_pedidos/')
